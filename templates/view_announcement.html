@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5 glass-card">
+  <h2 class="text-white">{{ ann.title }}</h2>
+  <p class="text-light mt-3">{{ ann.content }}</p>
+
+  {% if ann.description %}
+    <p class="text-light fst-italic"><i class="bi bi-chat-left-text"></i> {{ ann.description }}</p>
+  {% endif %}
+
+  {% if ann.location %}
+    <p class="text-light"><i class="bi bi-geo-alt-fill text-info"></i> {{ ann.location }}</p>
+  {% endif %}
+
+  {% if ann.file_path %}
+    {% set file_ext = ann.file_path.lower().split('.')[-1] %}
+    <div class="mt-3">
+      {% if file_ext in ['jpg', 'jpeg', 'png', 'gif'] %}
+        <img src="{{ url_for('static', filename=ann.file_path.split('static/')[-1]) }}"
+             class="img-fluid rounded shadow mb-2"
+             style="max-height: 400px;"
+             alt="announcement media">
+      {% endif %}
+      <a href="{{ url_for('static', filename=ann.file_path.split('static/')[-1]) }}"
+         class="btn btn-outline-light"
+         download>
+        📎 Download {{ 'Image' if file_ext in ['jpg','jpeg','png','gif'] else 'File' }}
+      </a>
+    </div>
+  {% endif %}
+
+  <p class="text-muted mt-3">
+    <i class="bi bi-clock-history"></i> {{ ann.date_posted.strftime('%Y-%m-%d %H:%M') }}
+  </p>
+
+  <a href="{{ url_for('index') }}" class="btn btn-sm btn-outline-info rounded-pill mt-2">← Back to announcements</a>
+</div>
+{% endblock %}

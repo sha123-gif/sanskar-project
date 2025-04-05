@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container my-5">
+
+  <!-- Glowing Header -->
+  <div class="text-center mb-5">
+    <h2 class="fw-bold heading-glow display-5 text-yellow">
+      <span class="rocket-trail"></span> Plot Updates And Details <span class="rocket-trail"></span>
+    </h2>
+    <p class="text-yellow fs-4">Explore the latest Plots announcements and updates 🚀</p>
+  </div>
+
+  <!-- 🔭 Scrolling Image Ticker -->
+  <div class="image-ticker-container mb-5">
+    <div class="image-ticker-track">
+      {% for ann in image_announcements %}
+        <img src="{{ url_for('static', filename=ann.file_path) }}" alt="Announcement Image" class="ticker-image" />
+      {% endfor %}
+      {% for ann in image_announcements %}
+        <img src="{{ url_for('static', filename=ann.file_path) }}" alt="Announcement Image" class="ticker-image" />
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Announcement Grid -->
+  <div class="row g-4">
+    {% for ann in announcements %}
+    <div class="col-md-6 col-lg-4">
+      <div class="announcement-card animate-float h-100">
+
+        {% if ann.file_path and ann.file_path.lower().split('.')[-1] in ['jpg', 'jpeg', 'png', 'gif'] %}
+        <img src="{{ url_for('static', filename=ann.file_path) }}"
+             class="announcement-image"
+             alt="Announcement Media">
+        {% endif %}
+
+        <div class="announcement-body text-yellow">
+          <h4 class="mb-2 fw-bold">{{ ann.title }}</h4>
+
+          <p class="fs-6">{{ ann.content[:200] }}{% if ann.content|length > 200 %}...{% endif %}</p>
+
+          {% if ann.description %}
+          <p class="fst-italic"><i class="fas fa-comment-alt"></i> {{ ann.description }}</p>
+          {% endif %}
+
+          {% if ann.location %}
+          <p class="mb-2">
+            <i class="fas fa-map-marker-alt text-warning"></i>
+            <a href="https://www.google.com/maps/search/?api=1&query={{ ann.location | urlencode }}"
+               target="_blank" class="text-yellow text-decoration-underline">
+              View on Google Maps
+            </a><br>
+            <small>{{ ann.location }}</small>
+          </p>
+          {% endif %}
+
+          {% if ann.file_path %}
+          {% set file_ext = ann.file_path.lower().split('.')[-1] %}
+          {% if file_ext not in ['jpg', 'jpeg', 'png', 'gif'] %}
+          <a href="{{ url_for('static', filename=ann.file_path) }}"
+             class="btn btn-sm btn-outline-warning mt-2" download>
+            <i class="fas fa-paperclip"></i> Download File
+          </a>
+          {% endif %}
+          {% endif %}
+
+          <a href="{{ url_for('view_announcement', announcement_id=ann.id) }}"
+             class="btn btn-sm btn-outline-warning rounded-pill mt-3">
+            <i class="fas fa-search"></i> Read More
+          </a>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="glass-card text-center text-yellow animate-float">
+      <p class="fs-5">No announcements yet. Admin is calibrating the hyperdrive 💫</p>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Pagination -->
+  {% if pagination %}
+  <nav aria-label="Page navigation" class="mt-5">
+    <ul class="pagination justify-content-center">
+      {% if pagination.has_prev %}
+      <li class="page-item">
+        <a class="page-link bg-dark text-yellow border-warning" href="{{ url_for(request.endpoint, page=pagination.prev_num) }}">
+          &laquo; Prev
+        </a>
+      </li>
+      {% endif %}
+
+      {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+        {% if page_num %}
+          {% if page_num == pagination.page %}
+            <li class="page-item active"><span class="page-link bg-warning border-0 text-dark fw-bold">{{ page_num }}</span></li>
+          {% else %}
+            <li class="page-item"><a class="page-link bg-dark text-yellow border-warning" href="{{ url_for(request.endpoint, page=page_num) }}">{{ page_num }}</a></li>
+          {% endif %}
+        {% else %}
+          <li class="page-item disabled"><span class="page-link text-yellow">…</span></li>
+        {% endif %}
+      {% endfor %}
+
+      {% if pagination.has_next %}
+      <li class="page-item">
+        <a class="page-link bg-dark text-yellow border-warning" href="{{ url_for(request.endpoint, page=pagination.next_num) }}">
+          Next &raquo;
+        </a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+</div>
+
+<!-- Styles -->
+<style>
+  .text-yellow {
+    color: #ffff66 !important;
+  }
+
+  .heading-glow {
+    text-shadow: 0 0 15px #ffffcc, 0 0 30px #ffe600;
+  }
+
+  .rocket-trail {
+    display: inline-block;
+    animation: floatRocket 2s ease-in-out infinite;
+    position: relative;
+  }
+
+  .rocket-trail::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 18px;
+    background: linear-gradient(to bottom, #f5ff66, transparent);
+    border-radius: 50%;
+    opacity: 0.9;
+    animation: flameTrail 0.5s ease-in-out infinite alternate;
+  }
+
+  @keyframes floatRocket {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  @keyframes flameTrail {
+    from { height: 15px; opacity: 0.6; }
+    to { height: 20px; opacity: 1; }
+  }
+
+  .announcement-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    overflow: hidden;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
+  }
+
+  .announcement-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 0 60px rgba(255, 255, 0, 0.2);
+  }
+
+  .announcement-image {
+    width: 100%;
+    max-height: 220px;
+    object-fit: cover;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .announcement-body {
+    padding: 25px 20px;
+    font-size: 1.1rem;
+  }
+
+  .animate-float {
+    animation: popFade 0.8s ease, subtleFloat 6s ease-in-out infinite;
+  }
+
+  @keyframes popFade {
+    0% { opacity: 0; transform: scale(0.95) translateY(20px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  @keyframes subtleFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-2px); }
+  }
+
+  .pagination .page-link {
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    transition: background 0.3s ease;
+  }
+
+  .pagination .page-link:hover {
+    background-color: #ffc107;
+    color: #000;
+  }
+
+  /* 🔁 Scrolling Image Ticker Styles */
+  .image-ticker-container {
+    overflow: hidden;
+    white-space: nowrap;
+    background: rgba(255, 255, 0, 0.05);
+    border: 1px solid #ffff66;
+    border-radius: 10px;
+    padding: 10px 0;
+    position: relative;
+  }
+
+  .image-ticker-track {
+    display: flex;
+    animation: scrollTicker 40s linear infinite;
+    gap: 20px;
+  }
+
+  .ticker-image {
+    height: 60px;
+    width: auto;
+    border-radius: 6px;
+    box-shadow: 0 0 10px #ff0a, 0 0 5px #ffc10788;
+    transition: transform 0.3s ease;
+  }
+
+  .ticker-image:hover {
+    transform: scale(1.1);
+  }
+
+  @keyframes scrollTicker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+</style>
+{% endblock %}

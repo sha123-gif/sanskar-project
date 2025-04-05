@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="text-center mb-5">
+    <h2 class="fw-bold" style="color: #89caff; text-shadow: 0 0 8px rgba(138,180,255,0.4);">
+      🔐 Welcome Back, Space Traveler
+    </h2>
+    <p class="text-light opacity-75">Please enter your credentials to dock at your command station.</p>
+  </div>
+
+  <form method="POST" class="glass-card p-5" style="max-width: 450px; margin: auto;">
+    <div class="form-floating mb-4">
+      <input type="text" name="username" class="form-control bg-dark border-0 text-white shadow-sm" id="floatingUsername" placeholder="Username" required>
+      <label for="floatingUsername" class="text-muted">👤 Username</label>
+    </div>
+
+    <div class="form-floating mb-4">
+      <input type="password" name="password" class="form-control bg-dark border-0 text-white shadow-sm" id="floatingPassword" placeholder="Password" required>
+      <label for="floatingPassword" class="text-muted">🔒 Password</label>
+    </div>
+
+    <button class="btn btn-outline-light w-100 py-2 fw-semibold shadow-sm">🚀 Launch</button>
+
+    <div class="d-flex justify-content-between mt-3 small">
+      <a href="/forgot-password" class="text-info text-decoration-none">Forgot Password?</a>
+      <a href="/register" class="text-warning text-decoration-none">Create an Account</a>
+    </div>
+  </form>
+{% endblock %}

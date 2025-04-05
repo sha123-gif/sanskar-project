@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+
+  {% if not verified %}
+    <h2 class="text-center mb-4">🔐 Admin Access Required</h2>
+    <form method="POST" class="glass-card mx-auto" style="max-width: 400px;">
+      <div class="mb-3">
+        <label for="passcode" class="form-label">Enter Admin Passcode</label>
+        <input type="password" id="passcode" name="passcode" class="form-control form-control-lg rounded-pill" placeholder="Enter passcode" required>
+      </div>
+      <div class="d-grid">
+        <button type="submit" class="btn btn-warning btn-lg rounded-pill">Unlock Admin Panel</button>
+      </div>
+    </form>
+
+  {% else %}
+    <h2 class="text-center mb-4">🛠 Post an Announcement</h2>
+    <form method="POST" enctype="multipart/form-data" class="glass-card mx-auto" style="max-width: 600px;">
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" id="title" name="title" class="form-control form-control-lg rounded-pill" placeholder="Announcement title" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="content" class="form-label">Content</label>
+        <textarea id="content" name="content" class="form-control rounded-4 p-3" rows="4" placeholder="Write the announcement..." required></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea id="description" name="description" class="form-control rounded-4 p-3" rows="3" placeholder="Optional description..."></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label for="location" class="form-label">Location</label>
+        <input type="text" id="location" name="location" class="form-control form-control-lg rounded-pill" placeholder="e.g. Mars Base Alpha">
+      </div>
+
+      <div class="mb-4">
+        <label for="file" class="form-label">Attach Image/File</label>
+        <input class="form-control" type="file" name="file" id="file">
+      </div>
+
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary btn-lg rounded-pill">🚀 Post Announcement</button>
+      </div>
+    </form>
+  {% endif %}
+
+{% endblock %}

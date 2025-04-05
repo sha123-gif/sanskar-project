@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2 class="text-center mb-4">🧾 Create an Account</h2>
+
+  <form method="POST" class="glass-card mx-auto" style="max-width: 500px;">
+    <div class="mb-3">
+      <label for="username" class="form-label">Username</label>
+      <input type="text" id="username" name="username" class="form-control form-control-lg rounded-pill" placeholder="Enter username" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" id="password" name="password" class="form-control form-control-lg rounded-pill" placeholder="Enter password" required>
+    </div>
+
+    <div class="mb-4">
+      <label for="role" class="form-label">Select Role</label>
+      <select id="role" name="role" class="form-control form-control-lg rounded-pill" required>
+        <option value="viewer" selected>Viewer</option>
+        <option value="admin">Admin</option>
+      </select>
+    </div>
+
+    <div class="d-grid">
+      <button class="btn btn-success btn-lg rounded-pill">Register</button>
+    </div>
+
+    <div class="mt-3 text-center">
+      <a href="/login" class="text-info">Already have an account? Login</a>
+    </div>
+  </form>
+{% endblock %}
